@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     private Transform m_GroundCheck;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
-    private bool isWallSliding;
     private float wallSlidingSpeed = 2f;
 
 
@@ -22,14 +21,6 @@ public class PlayerController : MonoBehaviour
     private bool _CoyoteTime; //coyote time 
     private float coyoteTimeValue = 0.3f;
 
-    #region Dash Values
-    private bool canDash = true;
-    private bool isDashing;
-    private float dashingPower = 24f;
-    private float dashingTime = 0.2f;
-    private float dashingCooldown = 1f;
-    #endregion
-
     void Start()
     {
         _Rigid2D = GetComponent<Rigidbody2D>();
@@ -38,22 +29,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (isDashing)
-        {
-            return;
-        }
-
         PlayerMovement playerMovement = new PlayerMovement();
-        WallSlide(playerMovement);
     }
 
     private void FixedUpdate()
 	{
-        if(isDashing)
-        {
-            return;
-        }
-
         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, 0.2f, _GroundLayers);
         //Burasi Karakter Ground Layerlarina degiyorsa Calisiyor @Han
         // | | | |
@@ -80,11 +60,6 @@ public class PlayerController : MonoBehaviour
                 _CoyoteTime = false;
 
             }
-        }
-
-        if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-        {
-            StartCoroutine(Dash());
         }
     }
 
@@ -152,38 +127,9 @@ public class PlayerController : MonoBehaviour
         }
         
     }
-    private IEnumerator Dash()
-    {
-        canDash = false;
-        isDashing = true;
-        float originalGravity = _Rigid2D.gravityScale;
-        _Rigid2D.gravityScale = 0f;
-        _Rigid2D.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
-        yield return new WaitForSeconds(dashingTime);
-        _Rigid2D.gravityScale = originalGravity;
-        isDashing = false;
-        yield return new WaitForSeconds(dashingCooldown);
-        canDash = true;
-
-    }
 
     private bool IsWalled()
     {
         return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
     }
-
-
-    private void WallSlide(PlayerMovement playerMovement)
-    {
-        if(IsWalled() && !_Grounded && playerMovement.horizontalMove != 0f)
-        {
-            isWallSliding = true;
-            _Rigid2D.velocity = new Vector2(_Rigid2D.velocity.x, Mathf.Clamp(_Rigid2D.velocity.y, -wallSlidingSpeed, float.MaxValue));
-        }
-        else
-        {
-            isWallSliding = false;
-        }
-    }
-
 }
