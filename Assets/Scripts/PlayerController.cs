@@ -36,17 +36,6 @@ public class PlayerController : MonoBehaviour
         m_GroundCheck = transform.GetChild(0);
     }
 
-    private void Update()
-    {
-        if (isDashing)
-        {
-            return;
-        }
-
-        PlayerMovement playerMovement = new PlayerMovement();
-        WallSlide(playerMovement);
-    }
-
     private void FixedUpdate()
 	{
         if(isDashing)
