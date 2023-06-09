@@ -6,28 +6,18 @@ public class PlayerController : MonoBehaviour
 {
 	private Rigidbody2D _Rigid2D = new Rigidbody2D(); //YOk ARTIIK RIGIDBODY!!! @Han
 
-    [Range(0, .3f)][SerializeField] private float _MovementSmoothing = .05f; //Daha Yumusak Gitmesini Sagliyo bu deger. @Han
+    //Daha Yumusak Gitmesini Sagliyo bu deger. @Han
     private float _MaxCoyoteTimeValue = 0.3f;
     [SerializeField] private LayerMask _GroundLayers; //Ground Layerlari
     private Transform m_GroundCheck;
-    [SerializeField] private Transform wallCheck;
-    [SerializeField] private LayerMask wallLayer;
-    private bool isWallSliding;
-    private float wallSlidingSpeed = 2f;
-
-
-
-    private Vector3 _Velocity = Vector3.zero; //bu neden burda bilmiyom bosver bunu. @Han
     public bool _Grounded; //Karakterin Ground Layer  olan objelere Dokunup Dokunmadigini Gosteren Deger. @Han
     private bool _CoyoteTime; //coyote time 
     private float coyoteTimeValue = 0.3f;
 
     #region Dash Values
-    private bool canDash = true;
+    
     private bool isDashing;
-    private float dashingPower = 24f;
-    private float dashingTime = 0.2f;
-    private float dashingCooldown = 1f;
+
     #endregion
 
     void Start()
@@ -38,83 +28,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
 	{
-        if(isDashing)
-        {
-            return;
-        }
+        if(isDashing){ return; }
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, 0.2f, _GroundLayers);
-        //Burasi Karakter Ground Layerlarina degiyorsa Calisiyor @Han
-        // | | | |
-        // v v v v 
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            if (colliders[i].gameObject != gameObject)
-            {
-                _Grounded = true;
-                _CoyoteTime = true;
-                coyoteTimeValue = _MaxCoyoteTimeValue;
-            }
-        }
-
-        //Burasi Karakter Ground Layerlarina degmiyorsa Calisiyor @Han
-        // | | | |
-        // v v v v 
-        if (colliders.Length <= 0)
-        {
-            _Grounded = false;
-            coyoteTimeValue -= 1 * Time.deltaTime;
-            if (coyoteTimeValue < 0f)
-            {
-                _CoyoteTime = false;
-
-            }
-        }
-
-        if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-        {
-            StartCoroutine(Dash());
-        }
+        StateCheck();
     }
 
-	public void Move(float moveSpeed)
-	{
-		if (_Grounded)
-		{
-            // Hedef Velocityi bul. @Han
-            Vector3 targetVelocity = new Vector2(moveSpeed * 10f, _Rigid2D.velocity.y); //Karakterin Yatay Duzlemde Ulastigi Maksimum Hiz @Han
-            // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
-            _Rigid2D.velocity = Vector3.SmoothDamp(_Rigid2D.velocity, targetVelocity, ref _Velocity, _MovementSmoothing);
-
-            //Gittigi yone gore karakteri cevir @Han
-            if (moveSpeed > 0)
-			{
-				Flip('R');
-			}else if (moveSpeed < 0)
-			{
-				Flip('L');
-			}
-
-		}else if (!_Grounded)
-        {
-            // Hedef Velocityi bul. @Han
-            Vector3 targetVelocity = new Vector2(moveSpeed * 10f, _Rigid2D.velocity.y);
-            // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
-            _Rigid2D.velocity = Vector3.SmoothDamp(_Rigid2D.velocity, targetVelocity, ref _Velocity, _MovementSmoothing);
-
-            //Gittigi yone gore karakteri cevir @Han
-            if (moveSpeed > 0)
-            {
-                Flip('R');
-            }
-            else if (moveSpeed < 0)
-            {
-                Flip('L');
-            }
-        }
-    }
-
-    public void Jump(float JumpForce, bool overpower)
+    public void JumpMechanic(float JumpForce, bool overpower)
     {
         //overpower true ise coyotime degerini bypass ediyor.
         if (_CoyoteTime || overpower == true)
@@ -141,37 +60,35 @@ public class PlayerController : MonoBehaviour
         }
         
     }
-    private IEnumerator Dash()
-    {
-        canDash = false;
-        isDashing = true;
-        float originalGravity = _Rigid2D.gravityScale;
-        _Rigid2D.gravityScale = 0f;
-        _Rigid2D.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
-        yield return new WaitForSeconds(dashingTime);
-        _Rigid2D.gravityScale = originalGravity;
-        isDashing = false;
-        yield return new WaitForSeconds(dashingCooldown);
-        canDash = true;
 
-    }
+    private void StateCheck(){
 
-    private bool IsWalled()
-    {
-        return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
-    }
-
-
-    private void WallSlide(PlayerMovement playerMovement)
-    {
-        if(IsWalled() && !_Grounded && playerMovement.horizontalMove != 0f)
+         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, 0.2f, _GroundLayers);
+        //Burasi Karakter Ground Layerlarina degiyorsa Calisiyor @Han
+        // | | | |
+        // v v v v 
+        for (int i = 0; i < colliders.Length; i++)
         {
-            isWallSliding = true;
-            _Rigid2D.velocity = new Vector2(_Rigid2D.velocity.x, Mathf.Clamp(_Rigid2D.velocity.y, -wallSlidingSpeed, float.MaxValue));
+            if (colliders[i].gameObject != gameObject)
+            {
+                _Grounded = true;
+                _CoyoteTime = true;
+                coyoteTimeValue = _MaxCoyoteTimeValue;
+            }
         }
-        else
+
+        //Burasi Karakter Ground Layerlarina degmiyorsa Calisiyor @Han
+        // | | | |
+        // v v v v 
+        if (colliders.Length <= 0)
         {
-            isWallSliding = false;
+            _Grounded = false;
+            coyoteTimeValue -= 1 * Time.deltaTime;
+            if (coyoteTimeValue < 0f)
+            {
+                _CoyoteTime = false;
+
+            }
         }
     }
 

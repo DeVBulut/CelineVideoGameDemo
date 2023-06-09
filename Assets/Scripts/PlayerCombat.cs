@@ -20,8 +20,6 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private LayerMask enemyLayers;
     [SerializeField] private LayerMask bulletLayers;
     [Range(0, 10)][SerializeField] private int AttackDamage;
-
-    private Vector3 worldPositionofMouse;
     public bool isAttacking;
     private bool positionBehindEnemyBoolean;
 
@@ -35,19 +33,9 @@ public class PlayerCombat : MonoBehaviour
     void Update()
     {
 
-        // Get the position of the mouse in screen space
-        Vector3 mousePosition = Input.mousePosition;
+        GetPositionofMouse();
 
-        // Set the z coordinate to the distance from the camera to the game object
-        mousePosition.z = -Camera.main.transform.position.z; // amacini anlamadim @cag
-
-        // Convert the position from screen space to world space
-        worldPositionofMouse = Camera.main.ScreenToWorldPoint(mousePosition);
-
-
-        Collider2D[] DroneCircle = Physics2D.OverlapCircleAll(positionBehindEnemy, 0.4f);
-
-        if (positionBehindEnemyBoolean) { foreach (Collider2D collider in DroneCircle) { if (collider.gameObject.CompareTag("Player")) { positionBehindEnemyBoolean = false; isAttacking = false; rb.velocity = Vector2.zero; } } }
+        CheckifDashedThrough();
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -63,21 +51,25 @@ public class PlayerCombat : MonoBehaviour
     {
         // Play an attack animation
         animator.SetTrigger("Attack");
+
+        #region Attack Movement
+        //add attack movement here!
+        #endregion
+
+        #region Damage the Enemy
         //Bu attack range mouse bunun disindayken attack komutu calismiyor.
         Collider2D[] AttackRangeLimit = Physics2D.OverlapCircleAll(transform.position, _AttackRange);
         //buda mousein kendi icindeki alani attack yapmak icin. buyuk bir alan varki oyuncu biraz kenara bile tiklasa dusmana atak yapsin
-        Collider2D[] enemiesInRangeOfMouse = Physics2D.OverlapCircleAll(worldPositionofMouse, mouseSnapRange, enemyLayers); // center, radius, checking layer @cag
+        Collider2D[] enemiesInRangeOfMouse = Physics2D.OverlapCircleAll(GetPositionofMouse(), mouseSnapRange, enemyLayers); // center, radius, checking layer @cag
 
-
-        foreach (Collider2D collider in AttackRangeLimit)
+        foreach (Collider2D collider in enemiesInRangeOfMouse)
         {
             //Burda hem rangein hem de mouse alaninin icinde mi diye kontrol ediyor.
-            if (enemiesInRangeOfMouse.Contains(collider))
+            if (AttackRangeLimit.Contains(collider))
             {
                 if (collider.gameObject.CompareTag("Drone")) {
                     Debug.Log("Enemy Drone Hit");
-
-                    GetPositionBehindEnemy(collider.transform, 2);
+                    DashAttack(collider.transform, 2);
                     EnemyHealth enemyHealth = collider.gameObject.GetComponent<EnemyHealth>();
                     enemyHealth.GetHit(AttackDamage, this.gameObject.transform.position);
                 }
@@ -86,27 +78,17 @@ public class PlayerCombat : MonoBehaviour
                     EnemyHealth enemyHealth = collider.gameObject.GetComponent<EnemyHealth>();
                     enemyHealth.GetHit(AttackDamage, this.gameObject.transform.position);
                 }
-
             }
         }
-
-        if (AttackRangeLimit.Length <= 0) //Circle carpmazsa 
-        {
-            Debug.Log("No Enemies in Range");
-        }
+        #endregion
     }
-
     public void Deflect()
     {
-        // Play a deflect animation
-        //animator.SetTrigger("Deflect");
-
-
         //Bu attack range mouse bunun disindayken attack komutu calismiyor.
         Collider2D[] AttackRangeLimit = Physics2D.OverlapCircleAll(transform.position, _AttackRange);
 
         //buda mousein kendi icindeki alani attack yapmak icin. buyuk bir alan varki oyuncu biraz kenara bile tiklasa dusmana atak yapsin
-        Collider2D[] bulletsInRangeOfMouse = Physics2D.OverlapCircleAll(GetCollusionPoint(worldPositionofMouse), deflectRange, bulletLayers); // center, radius, checking layer @cag
+        Collider2D[] bulletsInRangeOfMouse = Physics2D.OverlapCircleAll(GetCollusionPoint(GetPositionofMouse()), deflectRange, bulletLayers); // center, radius, checking layer @cag
 
         foreach (Collider2D collider in AttackRangeLimit)
         {
@@ -131,9 +113,7 @@ public class PlayerCombat : MonoBehaviour
             }
         }
     }
-
-    //sorma kanka aciklamasi cok zor
-    public void GetPositionBehindEnemy(Transform enemyTransform, float distanceBehind)
+    public void DashAttack(Transform enemyTransform, float distanceBehind)
     {
         //burasi klasik self explanatory
         positionBehindEnemyBoolean = true;
@@ -146,6 +126,7 @@ public class PlayerCombat : MonoBehaviour
         Collider2D pCollider = this.gameObject.GetComponent<BoxCollider2D>();
         Collider2D eCollider = enemyTransform.gameObject.GetComponent<BoxCollider2D>();
         Physics2D.IgnoreCollision(pCollider, eCollider, true);
+
         #endregion
 
         Vector3 force = positionBehindEnemy - this.transform.position;
@@ -160,7 +141,54 @@ public class PlayerCombat : MonoBehaviour
         //bu gizmoslar icin
         xnf = positionBehindEnemy;
     }
+    private void CheckifDashedThrough(){
+         Collider2D[] DroneCircle = Physics2D.OverlapCircleAll(positionBehindEnemy, 0.4f);
 
+        if (positionBehindEnemyBoolean) 
+        { foreach (Collider2D collider in DroneCircle)
+         {
+             if (collider.gameObject.CompareTag("Player"))
+          { 
+            positionBehindEnemyBoolean = false; isAttacking = false; rb.velocity = Vector2.zero; 
+            } 
+          }
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        //burasi editorde attack range ve mouse range'i gormek icin kodlari bulunduruyor
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, _AttackRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(GetPositionofMouse(), mouseSnapRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(GetCollusionPoint(GetPositionofMouse()), mouseSnapRange);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(xnf, 0.4f);
+    }
+    public Vector3 GetPositionofMouse(){
+        
+        // Get the position of the mouse in screen space
+        Vector3 mousePosition = Input.mousePosition;
+
+        // Set the z coordinate to the distance from the camera to the game object
+        mousePosition.z = -Camera.main.transform.position.z; // amacini anlamadim @cag
+
+        // Convert the position from screen space to world space
+        Vector3 worldPositionofMouse = Camera.main.ScreenToWorldPoint(mousePosition);
+
+        return worldPositionofMouse;
+    }
+    private Vector2 GetCollusionPoint(Vector2 mousePosition)
+    {
+        Vector2 center = transform.position;
+        Vector2 direction = mousePosition - center;
+        float distance = Mathf.Min(direction.magnitude, _AttackRange);
+
+        Vector2 collisionPoint = center + direction.normalized * distance;
+
+        return collisionPoint;
+    }
     private IEnumerator FailSafe(float delay)
     {
         //bazi durumlarda karakterin arkasindaki lokasyona carpmiyor o yuzden failsafe mekanizmasi
@@ -172,30 +200,4 @@ public class PlayerCombat : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
     }
-
-    private Vector2 GetCollusionPoint(Vector2 mousePosition)
-    {
-        Vector2 center = transform.position;
-        Vector2 direction = mousePosition - center;
-        float distance = Mathf.Min(direction.magnitude, _AttackRange);
-
-        Vector2 collisionPoint = center + direction.normalized * distance;
-
-        return collisionPoint;
-    }
-
-
-    private void OnDrawGizmos()
-    {
-        //burasi editorde attack range ve mouse range'i gormek icin kodlari bulunduruyor
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, _AttackRange);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(worldPositionofMouse, mouseSnapRange);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(GetCollusionPoint(worldPositionofMouse), mouseSnapRange);
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(xnf, 0.4f);
-    }
-
 }
