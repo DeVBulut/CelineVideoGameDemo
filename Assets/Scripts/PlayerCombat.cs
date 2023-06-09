@@ -53,7 +53,14 @@ public class PlayerCombat : MonoBehaviour
         animator.SetTrigger("Attack");
 
         #region Attack Movement
-        //add attack movement here!
+        isAttacking = true;
+        StartCoroutine(FailSafe(0.25f));
+
+        // Calculate the direction from the player to the mouse position
+        Vector2 dashDirection = (GetPositionofMouse() - transform.position).normalized;
+
+        // Apply the dash force to the player
+        rb.AddForce(dashDirection * 10f, ForceMode2D.Impulse);
         #endregion
 
         #region Damage the Enemy
