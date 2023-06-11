@@ -19,20 +19,21 @@ public class PlayerCombat : MonoBehaviour
     private Vector2 dashDirection;
     private float cooldown = 0.25f;
 
+
     [SerializeField] private LayerMask enemyLayers;
     [SerializeField] private LayerMask bulletLayers;
-    [Range(0, 10)][SerializeField] private int AttackDamage;
+    [Range(0, 10)][SerializeField] private int AttackDamage;                    
     public bool isAttacking;
     private bool positionBehindEnemyBoolean;
 
-    private void Start()
-    {
+    private void Start(){
+
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
-    {
+    void Update(){
+
         GetPositionOfMouse();
         DroneDashCheck();
         cooldown = cooldown - Time.deltaTime;
@@ -40,8 +41,8 @@ public class PlayerCombat : MonoBehaviour
 
     }
 
-    public void Slash()
-    {
+    public void Slash(){
+
         #region SlashMovement
         isAttacking = true;
         StartCoroutine(FailSafe(0.25f));
@@ -93,6 +94,7 @@ public class PlayerCombat : MonoBehaviour
        
         cooldown = slashCooldown;
     }
+    
     public void DashSlash(Transform enemyTransform, float distanceBehind)
     {
         //burasi klasik self explanatory
@@ -121,6 +123,8 @@ public class PlayerCombat : MonoBehaviour
         //bu gizmoslar icin
         xnf = positionBehindEnemy;
     }
+
+
     private void DroneDashCheck(){
         Collider2D[] DroneCircle = Physics2D.OverlapCircleAll(positionBehindEnemy, 0.4f);
 
@@ -134,8 +138,8 @@ public class PlayerCombat : MonoBehaviour
           }
         }
     }
-    private void OnDrawGizmos()
-    {
+    private void OnDrawGizmos(){
+        
         //burasi editorde attack range ve mouse range'i gormek icin kodlari bulunduruyor
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, _AttackRange);
@@ -144,6 +148,8 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(xnf, 0.4f);
     }
+
+
     public Vector3 GetPositionOfMouse(){
         
         // Get the position of the mouse in screen space
@@ -157,8 +163,12 @@ public class PlayerCombat : MonoBehaviour
 
         return worldPositionofMouse;
     }
-    private Vector2 DeflectLocationFind(Vector2 mousePosition)
-    {
+
+
+    private Vector2 DeflectLocationFind(Vector2 mousePosition){
+
+
+
         Vector2 center = transform.position;
         Vector2 direction = mousePosition - center;
         float distance = Mathf.Min(direction.magnitude, _AttackRange);
@@ -167,8 +177,12 @@ public class PlayerCombat : MonoBehaviour
 
         return collisionPoint;
     }
-    private IEnumerator FailSafe(float delay)
-    {
+
+
+    private IEnumerator FailSafe(float delay){
+
+
+
         //bazi durumlarda karakterin arkasindaki lokasyona carpmiyor o yuzden failsafe mekanizmasi
         yield return new WaitForSeconds(delay);
         if (isAttacking == false) { yield break; }
@@ -178,4 +192,7 @@ public class PlayerCombat : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
     }
+
+    
 }
+
