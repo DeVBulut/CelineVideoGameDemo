@@ -21,7 +21,7 @@ public class PlayerCombat : MonoBehaviour
     private float mouseSnapRange = 0.6f; //mouseun etrafindaki alan
     private float deflectRange = 0.7f; //Deflect alani
     private float cooldown = 0.25f;
-    public bool isAttacking;
+    public bool isAttacking, slowAttack;
     private bool positionBehindEnemyBoolean;
     public bool canAttack;
 
@@ -53,12 +53,12 @@ public class PlayerCombat : MonoBehaviour
 
         if(canAttack){
             isAttacking = true;
-            StartCoroutine(FailSafe(0.25f)); 
+            StartCoroutine(FailSafe(0.15f)); 
             // Calculate the direction from the player to the mouse position
             dashDirection = (GetPositionOfMouse() - transform.position).normalized;
             // Apply the dash force to the player
             rb.velocity = Vector2.zero;
-            rb.AddForce(dashDirection * 8f, ForceMode2D.Impulse);
+            rb.AddForce(dashDirection * 12f, ForceMode2D.Impulse);
         }
         else{
             // Calculate the direction from the player to the mouse position
@@ -204,8 +204,15 @@ public class PlayerCombat : MonoBehaviour
         else
         {
             isAttacking = false;
+            slowAttack = true;
             Debug.Log("powerStopped");
         }
+        StartCoroutine(FailSafe2(1f));
+    }
+
+    private IEnumerator FailSafe2 (float delay){
+        yield return new WaitForSeconds(delay);
+        slowAttack = false;
     }
 
     private IEnumerator AttackDetect(float delay)

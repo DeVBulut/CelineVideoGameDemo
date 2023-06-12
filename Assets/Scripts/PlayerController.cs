@@ -39,8 +39,21 @@ public class PlayerController : MonoBehaviour
 
         StateCheck();
         StateController();
+        ApplyFriction();
         textState.text = playerState;
 
+    }
+
+    private void ApplyFriction(){
+        if(_Grounded){
+            float amount = Mathf.Min(Mathf.Abs(_Rigid2D.velocity.x), Mathf.Abs(0.3f));
+            amount *=Mathf.Sign(_Rigid2D.velocity.x);
+            _Rigid2D.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+        }else{
+            float amount = Mathf.Min(Mathf.Abs(_Rigid2D.velocity.x), Mathf.Abs(0.6f));
+            amount *=Mathf.Sign(_Rigid2D.velocity.x);
+            _Rigid2D.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+        }
     }
 
     public void StateController(){
@@ -48,6 +61,10 @@ public class PlayerController : MonoBehaviour
 
         if(pCombat.isAttacking){
             playerState = "Attacking";
+        }
+        else if(pCombat.slowAttack){
+            playerState = "SlowingDown";
+            
         }
         else if(_Grounded){
 
