@@ -8,31 +8,36 @@ public class PlayerCombat : MonoBehaviour
 {
     private Animator animator;
     private Rigidbody2D rb;
-    private float _AttackRange = 1.5f; //mouseun icidnde olupta attack yapabilecegii maksimum menzil
-    private float mouseSnapRange = 0.6f; //mouseun etrafindaki alan
-    private float deflectRange = 0.7f; //Deflect alani
-    [Range(0, 1f)][SerializeField] private float slashCooldown = 0.35f;
-    [Range(0, 20f)][SerializeField] private float additonalDeflectForce = 4f;
+    private PlayerController pController;
+    [Range(0, 1f)]  [SerializeField] private float slashCooldown = 0.2f;
+    [Range(0, 20f)] [SerializeField] private float additonalDeflectForce = 4f;
     [Range(0, 200f)][SerializeField] private float dashAttackSpeed = 4f;
+
     private Vector3 xnf;
     private Vector3 positionBehindEnemy;
     private Vector2 dashDirection;
-    private float cooldown = 0.25f;
 
+    private float _AttackRange = 1.5f; //mouseun icidnde olupta attack yapabilecegii maksimum menzil
+    private float mouseSnapRange = 0.6f; //mouseun etrafindaki alan
+    private float deflectRange = 0.7f; //Deflect alani
+    private float cooldown = 0.25f;
+    public bool isAttacking;
+    private bool positionBehindEnemyBoolean;
+    public bool canAttack;
 
     [SerializeField] private LayerMask enemyLayers;
     [SerializeField] private LayerMask bulletLayers;
     [Range(0, 10)][SerializeField] private int AttackDamage;                    
-    public bool isAttacking;
-    private bool positionBehindEnemyBoolean;
 
     private void Start(){
 
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        pController = GetComponent<PlayerController>();
     }
 
-    void Update(){
+    void Update()
+    {
 
         GetPositionOfMouse();
         DroneDashCheck();
@@ -41,17 +46,27 @@ public class PlayerCombat : MonoBehaviour
 
     }
 
-    public void Slash(){
+    public void Slash()
+    {
 
         #region SlashMovement
-        isAttacking = true;
-        StartCoroutine(FailSafe(0.25f));
 
-        // Calculate the direction from the player to the mouse position
-         dashDirection = (GetPositionOfMouse() - transform.position).normalized;
+        if(canAttack){
+            isAttacking = true;
+            StartCoroutine(FailSafe(0.25f)); 
+            // Calculate the direction from the player to the mouse position
+            dashDirection = (GetPositionOfMouse() - transform.position).normalized;
+            // Apply the dash force to the player
+            rb.velocity = Vector2.zero;
+            rb.AddForce(dashDirection * 8f, ForceMode2D.Impulse);
+        }
+        else{
+            // Calculate the direction from the player to the mouse position
+            dashDirection = (GetPositionOfMouse() - transform.position).normalized;
+            // Apply the dash force to the player
+            rb.AddForce(dashDirection, ForceMode2D.Impulse);
+        }
 
-        // Apply the dash force to the player
-        rb.AddForce(dashDirection * 10f, ForceMode2D.Impulse);
         #endregion
        
         #region EnemyDetection
@@ -93,9 +108,10 @@ public class PlayerCombat : MonoBehaviour
         #endregion
        
         cooldown = slashCooldown;
+        StartCoroutine(AttackDetect(0.1f)); 
     }
     
-    public void DashSlash(Transform enemyTransform, float distanceBehind)
+    public void DashSlash(Transform enemyTransform, float distanceBehind) 
     {
         //burasi klasik self explanatory
         positionBehindEnemyBoolean = true;
@@ -124,8 +140,8 @@ public class PlayerCombat : MonoBehaviour
         xnf = positionBehindEnemy;
     }
 
-
-    private void DroneDashCheck(){
+    private void DroneDashCheck()
+    {
         Collider2D[] DroneCircle = Physics2D.OverlapCircleAll(positionBehindEnemy, 0.4f);
 
         if (positionBehindEnemyBoolean) 
@@ -138,7 +154,9 @@ public class PlayerCombat : MonoBehaviour
           }
         }
     }
-    private void OnDrawGizmos(){
+
+    private void OnDrawGizmos()
+    {
         
         //burasi editorde attack range ve mouse range'i gormek icin kodlari bulunduruyor
         Gizmos.color = Color.blue;
@@ -149,8 +167,8 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.DrawWireSphere(xnf, 0.4f);
     }
 
-
-    public Vector3 GetPositionOfMouse(){
+    public Vector3 GetPositionOfMouse()
+    {
         
         // Get the position of the mouse in screen space
         Vector3 mousePosition = Input.mousePosition;
@@ -164,8 +182,8 @@ public class PlayerCombat : MonoBehaviour
         return worldPositionofMouse;
     }
 
-
-    private Vector2 DeflectLocationFind(Vector2 mousePosition){
+    private Vector2 DeflectLocationFind(Vector2 mousePosition)
+    {
 
 
 
@@ -178,21 +196,26 @@ public class PlayerCombat : MonoBehaviour
         return collisionPoint;
     }
 
-
-    private IEnumerator FailSafe(float delay){
-
-
-
+    private IEnumerator FailSafe(float delay)
+    {
         //bazi durumlarda karakterin arkasindaki lokasyona carpmiyor o yuzden failsafe mekanizmasi
         yield return new WaitForSeconds(delay);
         if (isAttacking == false) { yield break; }
         else
         {
             isAttacking = false;
-            rb.velocity = Vector2.zero;
+            Debug.Log("powerStopped");
         }
     }
 
-    
+    private IEnumerator AttackDetect(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if(pController._Grounded == false){
+            canAttack = false;
+        }
+    }
+
 }
 

@@ -10,16 +10,17 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D _rigid;
 
     #region Horizontal Movement Values
-    public float horizontalMove = 0f;
+
     private Vector3 _velocity = Vector3.zero;
     [Range(0, 100f)][SerializeField] private float runSpeed = 30f;
     [Range(0, .3f)][SerializeField] private float _movementSmoothing = .05f; 
+    [Range(0, 2f)][SerializeField] private float _movementSmoothingonAir = .05f; 
     #endregion
 
     #region JumpValues
     [Range(0, 1000f)][SerializeField] private float JumpPower = 400f;
     private int JumpCount;
-    private int _MaxJumpCount = 2;
+    private int _MaxJumpCount = 1;
     #endregion
     void Start()
     {
@@ -36,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void FixedUpdate()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
+        float horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
         if(!pCombat.isAttacking) 
         {
             MoveHorizontal(horizontalMove);
@@ -68,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
             // Hedef Velocityi bul. @Han
             Vector3 targetVelocity = new Vector2(moveSpeed * 10f, _rigid.velocity.y);
             // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
-            _rigid.velocity = Vector3.SmoothDamp(_rigid.velocity, targetVelocity, ref _velocity, _movementSmoothing);
+            _rigid.velocity = Vector3.SmoothDamp(_rigid.velocity, targetVelocity, ref _velocity, _movementSmoothingonAir);
 
             //Gittigi yone gore karakteri cevir @Han
             if (moveSpeed > 0)
@@ -90,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
             if (_playerController._Grounded == true)
             {
                 JumpCount = _MaxJumpCount;
-                animator.SetBool("IsJumping", false);
             }
 
             if (JumpCount <= _MaxJumpCount - 1 && JumpCount > 0)
