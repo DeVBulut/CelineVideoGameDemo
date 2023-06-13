@@ -168,7 +168,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 0.9}
+  m_Size: {x: 0.68, y: 0.63}
   m_EdgeRadius: 0
 --- !u!114 &732136649062944659
 MonoBehaviour:
@@ -182,11 +182,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06edd635aaa16cf40b9748ee8c8b3abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MovementSmoothing: 0.05
+  playerState: 
+  textState: {fileID: 0}
   _GroundLayers:
     serializedVersion: 2
     m_Bits: 8
   _Grounded: 1
+  _CoyoteTime: 0
 --- !u!114 &732136649062944664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,8 +201,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20b16c83f2dd0541bd15b88217dd414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: 30
-  JumpPower: 200
+  runSpeed: 40
+  airSpeed: 7
+  _movementSmoothing: 0.15
+  JumpPower: 450
+  JumpCount: 0
+  _MaxJumpCount: 1
 --- !u!114 &732136649062944657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,9 +231,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9c273c475bb5f4f8b8ada0feb0320f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deflectSpeedMultiplier: 10
+  slashCooldown: 0.2
   additonalDeflectForce: 0.2
   dashAttackSpeed: 4
+  isAttacking: 0
+  slowAttack: 0
+  canAttack: 0
   enemyLayers:
     serializedVersion: 2
     m_Bits: 320
@@ -235,7 +244,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   AttackDamage: 1
-  isAttacking: 0
 --- !u!95 &732136649062944658
 Animator:
   serializedVersion: 5

@@ -17,9 +17,8 @@ public class PlayerCombat : MonoBehaviour
     private Vector3 positionBehindEnemy;
     private Vector2 dashDirection;
 
-    private float _AttackRange = 1.5f; //mouseun icidnde olupta attack yapabilecegii maksimum menzil
-    private float mouseSnapRange = 0.6f; //mouseun etrafindaki alan
-    private float deflectRange = 0.7f; //Deflect alani
+    private float _AttackRange = 1.6f; //mouseun icidnde olupta attack yapabilecegii maksimum menzil
+    private float deflectRange = 0.75f; //Deflect alani
     private float cooldown = 0.25f;
     public bool isAttacking, slowAttack;
     private bool positionBehindEnemyBoolean;
@@ -38,9 +37,8 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-
         GetPositionOfMouse();
-        DroneDashCheck();
+        //DroneDashCheck();
         cooldown = cooldown - Time.deltaTime;
         if(Input.GetKeyDown(KeyCode.Mouse0) && cooldown < 0) {  Slash(); }
 
@@ -48,17 +46,15 @@ public class PlayerCombat : MonoBehaviour
 
     public void Slash()
     {
-
         #region SlashMovement
 
         if(canAttack){
             isAttacking = true;
-            StartCoroutine(FailSafe(0.15f)); 
             // Calculate the direction from the player to the mouse position
             dashDirection = (GetPositionOfMouse() - transform.position).normalized;
             // Apply the dash force to the player
             rb.velocity = Vector2.zero;
-            rb.AddForce(dashDirection * 12f, ForceMode2D.Impulse);
+            rb.AddForce(dashDirection * 10f, ForceMode2D.Impulse);
         }
         else{
             // Calculate the direction from the player to the mouse position
@@ -108,9 +104,9 @@ public class PlayerCombat : MonoBehaviour
         #endregion
        
         cooldown = slashCooldown;
-        StartCoroutine(AttackDetect(0.1f)); 
     }
-    
+
+    #region Dash-Slash Function
     public void DashSlash(Transform enemyTransform, float distanceBehind) 
     {
         //burasi klasik self explanatory
@@ -132,14 +128,12 @@ public class PlayerCombat : MonoBehaviour
         //z eksenine kuvveti kesiyorumki ebenin amina ucmasin
         force.z = 0f; 
         isAttacking = true;
-        StartCoroutine(FailSafe(0.25f));
         rb.velocity = Vector2.zero;
         rb.AddForce(force * dashAttackSpeed, ForceMode2D.Impulse);
         Debug.Log("Dashed Through");
         //bu gizmoslar icin
         xnf = positionBehindEnemy;
     }
-
     private void DroneDashCheck()
     {
         Collider2D[] DroneCircle = Physics2D.OverlapCircleAll(positionBehindEnemy, 0.4f);
@@ -154,20 +148,9 @@ public class PlayerCombat : MonoBehaviour
           }
         }
     }
-
-    private void OnDrawGizmos()
-    {
-        
-        //burasi editorde attack range ve mouse range'i gormek icin kodlari bulunduruyor
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, _AttackRange);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(DeflectLocationFind(GetPositionOfMouse()), mouseSnapRange);
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(xnf, 0.4f);
-    }
-
-    public Vector3 GetPositionOfMouse()
+    #endregion
+    #region Mouse Functions
+    private Vector3 GetPositionOfMouse()
     {
         
         // Get the position of the mouse in screen space
@@ -184,9 +167,6 @@ public class PlayerCombat : MonoBehaviour
 
     private Vector2 DeflectLocationFind(Vector2 mousePosition)
     {
-
-
-
         Vector2 center = transform.position;
         Vector2 direction = mousePosition - center;
         float distance = Mathf.Min(direction.magnitude, _AttackRange);
@@ -195,34 +175,18 @@ public class PlayerCombat : MonoBehaviour
 
         return collisionPoint;
     }
-
-    private IEnumerator FailSafe(float delay)
+    
+    #endregion 
+    private void OnDrawGizmos()
     {
-        //bazi durumlarda karakterin arkasindaki lokasyona carpmiyor o yuzden failsafe mekanizmasi
-        yield return new WaitForSeconds(delay);
-        if (isAttacking == false) { yield break; }
-        else
-        {
-            isAttacking = false;
-            slowAttack = true;
-            Debug.Log("powerStopped");
-        }
-        StartCoroutine(FailSafe2(1f));
+        
+        //burasi editorde attack range ve mouse range'i gormek icin kodlari bulunduruyor
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, _AttackRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(DeflectLocationFind(GetPositionOfMouse()), deflectRange);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(xnf, 0.4f);
     }
-
-    private IEnumerator FailSafe2 (float delay){
-        yield return new WaitForSeconds(delay);
-        slowAttack = false;
-    }
-
-    private IEnumerator AttackDetect(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        if(pController._Grounded == false){
-            canAttack = false;
-        }
-    }
-
 }
 
