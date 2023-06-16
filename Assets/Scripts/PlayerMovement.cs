@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region Components
     private PlayerController pController;
     private Animator animator;
     private PlayerCombat pCombat;
     private Rigidbody2D rb;
+    #endregion
 
     #region Horizontal Movement Values
 
     private Vector3 _velocity = Vector3.zero;
     [Range(0, 100f)][SerializeField] private float runSpeed = 35f;
-    [Range(0, 10f)][SerializeField] private float airSpeed = 8f;
+    [Range(0, 10f)][SerializeField] public float airSpeed = 7f;
     [Range(0, .3f)][SerializeField] private float _movementSmoothing = 0.15f; 
     #endregion
 
@@ -22,6 +24,10 @@ public class PlayerMovement : MonoBehaviour
     public int JumpCount;
     public int _MaxJumpCount = 1;
     #endregion
+
+    #region DashValues 
+    public bool isDashing = false;
+    #endregion 
 
     void Start()
     {

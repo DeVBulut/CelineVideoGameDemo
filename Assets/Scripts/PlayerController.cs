@@ -7,9 +7,11 @@ public class PlayerController : MonoBehaviour
 {
     public string playerState;
     public TextMeshProUGUI textState;
-    public TextMeshProUGUI textSpeedState;
+    public TextMeshProUGUI textVerticalSpeedState;
+    public TextMeshProUGUI textHorizontalSpeedState;
 	private Rigidbody2D rb;//YOk ARTIIK RIGIDBODY!!! @Han
     private PlayerCombat pCombat;
+    private PlayerMovement pMovement;
     //Daha Yumusak Gitmesini Sagliyo bu deger. @Han
     private float _MaxCoyoteTimeValue = 0.3f;
     [SerializeField] private LayerMask _GroundLayers; //Ground Layerlari
@@ -19,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private float coyoteTimeValue = 0.3f;
     private float fallMultiplier = 1.5f; 
     private float fallFastMultiplier = 1f; 
-    private float peakMultiplier = 0.7f; 
+    private float peakMultiplier = 0.6f; 
 
     #region Dash Values
     
@@ -31,6 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         pCombat = GetComponent<PlayerCombat>();
+        pMovement = GetComponent<PlayerMovement>();
         m_GroundCheck = transform.GetChild(0);
         textState = transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
         
@@ -40,9 +43,10 @@ public class PlayerController : MonoBehaviour
 	{
         StateCheck();
         StateController();
-        SetFriction();
+        SetGravity();
         textState.text = playerState;
-        textSpeedState.text = rb.velocity.y.ToString();
+        textVerticalSpeedState.text = rb.velocity.y.ToString();
+        textHorizontalSpeedState.text = rb.velocity.x.ToString();
     }
 
      public void StateController(){
@@ -50,6 +54,9 @@ public class PlayerController : MonoBehaviour
         if(pCombat.isAttacking){
 
             playerState = "Attacking";
+        }else if(pMovement.isDashing){
+
+            playerState = "Dashing";
         }
         else if(_Grounded)
         {
@@ -73,37 +80,43 @@ public class PlayerController : MonoBehaviour
             float magnitude = velocity.y;
 
 
-            if(magnitude <= 1.5f && magnitude >= -1.5f){
+            if(magnitude <= 1f && magnitude >= -1f){
 
+                pMovement.airSpeed = 9f;
                 playerState = "Peak";
             }
-            else if(magnitude > 1.5f){
-                
-                playerState = "Ascend";
-            }else if(magnitude < -1.5f){
+             else if(magnitude > 1f){
 
-                playerState = "descendFast";
+                pMovement.airSpeed = 8f; 
+                playerState = "Ascend";
+            }else if(magnitude < -1f){
+
+                pMovement.airSpeed = 8f;
+                playerState = "Des_Fast";
             }
             else if(magnitude < -3.5f){
 
+                pMovement.airSpeed = 7f;
                 playerState = "Descend";
-            }
-        
+            }       
         }
     }
 
-    public void SetFriction(){
+    public void SetGravity(){
         if(playerState == "Peak"){
 
             rb.velocity += Vector2.up * Physics2D.gravity.y * (peakMultiplier - 1) * Time.deltaTime;
+
         }
         else if (playerState == "descendFast"){
 
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallFastMultiplier - 1) * Time.deltaTime;
+
         }
         else if(playerState == "Descend"){
 
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+
         }
         else if(playerState == "Ascend"){
 
