@@ -55,14 +55,14 @@ public class PlayerMovement : MonoBehaviour
     #region Horizontal Functions
     public void MoveHorizontal(float moveSpeed)
 	{
-		if (pController._Grounded)
+		if (pController.IsGrounded())
 		{
             // Hedef Velocityi bul. @Han
             Vector3 targetVelocity = new Vector2(moveSpeed * 10f, rb.velocity.y); //Karakterin Yatay Duzlemde Ulastigi Maksimum Hiz @Han
             // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
 		} 
-        else if (!pController._Grounded)
+        else if (!pController.IsGrounded())
         {
             // Hedef Velocityi bul. @Han
             Vector3 targetVelocity = new Vector2(moveSpeed * airSpeed, rb.velocity.y);
@@ -82,35 +82,18 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region Jump Mechanic
+
     public void Jump(){
 
-        if (Input.GetButtonDown("Jump"))
+        if (pController._CoyoteTime && Input.GetButtonDown("Jump") && rb.velocity.y < 0.01f)
         {
-            if (pController._Grounded == true)
-            {
-                JumpCount = _MaxJumpCount;
-            }
-
-            if (JumpCount <= _MaxJumpCount - 1 && JumpCount > 0)
-            {
-                Jump(JumpPower, true);
-                JumpCount--;
-            }
-            else if (JumpCount > _MaxJumpCount - 1)
-            {
-                Jump(JumpPower, false);
-                JumpCount--;
-            }
+            Vector3 velocity = rb.velocity;
+            velocity.y = 0f;
+            rb.velocity = velocity;
+            rb.AddForce(new Vector2(rb.velocity.x, JumpPower));
         }
-    }
+        
 
-    public void Jump(float JumpForce, bool overpower)
-    {
-        //overpower true ise coyotime degerini bypass ediyor.
-        if (pController._CoyoteTime || overpower == true)
-        {
-            rb.AddForce(new Vector2(rb.velocity.x, JumpForce));
-        }
     }
 
     #endregion

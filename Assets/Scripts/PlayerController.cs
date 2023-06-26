@@ -13,15 +13,15 @@ public class PlayerController : MonoBehaviour
     private PlayerCombat pCombat;
     private PlayerMovement pMovement;
     //Daha Yumusak Gitmesini Sagliyo bu deger. @Han
-    private float _MaxCoyoteTimeValue = 0.3f;
+    private float _MaxCoyoteTimeValue = 0.25f;
     [SerializeField] private LayerMask _GroundLayers; //Ground Layerlari
     private Transform m_GroundCheck;
     public bool _Grounded; //Karakterin Ground Layer  olan objelere Dokunup Dokunmadigini Gosteren Deger. @Han
     public bool _CoyoteTime; //coyote time 
-    private float coyoteTimeValue = 0.3f;
-    private float fallMultiplier = 1.5f; 
-    private float fallFastMultiplier = 1f; 
-    private float peakMultiplier = 0.6f; 
+    public float coyoteTimeValue;
+    private float fallMultiplier = 1.2f; 
+    private float fallFastMultiplier = 0.8f; 
+    private float peakMultiplier = 0.5f; 
 
     #region Dash Values
     
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
             playerState = "Dashing";
         }
-        else if(_Grounded)
+        else if(IsGrounded())
         {
 
             Vector2 velocity =  rb.velocity;
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
                 playerState = "Idle";
             }
         }
-        else if(!_Grounded)
+        else if(!IsGrounded())
         {
 
             Vector2 velocity =  rb.velocity;
@@ -125,27 +125,26 @@ public class PlayerController : MonoBehaviour
     }
       private void StateCheck(){
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, 0.2f, _GroundLayers);
 
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            if (colliders[i].gameObject != gameObject)
-            {
-                _Grounded = true;
-                _CoyoteTime = true;
-                coyoteTimeValue = _MaxCoyoteTimeValue;
-            }
-        }
+        if(IsGrounded()){
 
-        if (colliders.Length <= 0)
-        {
-            _Grounded = false;
-            coyoteTimeValue -= 1 * Time.deltaTime;
-            if (coyoteTimeValue < 0f)
-            {
-                _CoyoteTime = false;
-            }
+            coyoteTimeValue = _MaxCoyoteTimeValue;
+        }else{
+            coyoteTimeValue -= Time.deltaTime; 
         }
+        
+        if (coyoteTimeValue > 0f) 
+        {
+            _CoyoteTime = true;
+        }
+        else{
+            _CoyoteTime = false;
+        }
+    }
+
+    public bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(m_GroundCheck.position, 0.2f, _GroundLayers);
     }
 
 }

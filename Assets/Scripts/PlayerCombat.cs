@@ -22,7 +22,7 @@ public class PlayerCombat : MonoBehaviour
     private float cooldown = 0.25f;
     public bool isAttacking, slowAttack;
     private bool positionBehindEnemyBoolean;
-    public bool canAttack;
+    public bool canAttack = true;
 
     [SerializeField] private LayerMask enemyLayers;
     [SerializeField] private LayerMask bulletLayers;
