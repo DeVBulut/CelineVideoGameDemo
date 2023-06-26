@@ -31,11 +31,15 @@ public class PlayerAnimationManager : MonoBehaviour
             animator.CrossFade("Player_Ascend", 0, 0);
             break;
 
-            case "Descend" :
+            case "_PeakLow":
             animator.CrossFade("Player_Descend", 0, 0);
             break;
-    
-            case "Des_Fast" :
+
+            case "Descend":
+            animator.CrossFade("Player_Descend", 0, 0);
+            break;
+
+            case "Des_Fast":
             animator.CrossFade("Player_Descend", 0, 0);
             break;
         }

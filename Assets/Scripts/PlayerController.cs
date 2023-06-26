@@ -80,10 +80,13 @@ public class PlayerController : MonoBehaviour
             float magnitude = velocity.y;
 
 
-            if(magnitude <= 1f && magnitude >= -1f){
+            if(magnitude <= 1f && magnitude > 0f){
 
                 pMovement.airSpeed = 9f;
                 playerState = "Peak";
+            }else if(magnitude <= 0f && magnitude >= -1f){
+                pMovement.airSpeed = 9f;
+                playerState = "PeakLow";
             }
              else if(magnitude > 1f){
 
@@ -103,7 +106,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void SetGravity(){
-        if(playerState == "Peak"){
+        if(playerState == "Peak" || playerState == "PeakLow"){
 
             rb.velocity += Vector2.up * Physics2D.gravity.y * (peakMultiplier - 1) * Time.deltaTime;
 
