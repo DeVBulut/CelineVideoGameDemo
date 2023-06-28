@@ -45,17 +45,27 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
         float horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
-        if(!pCombat.isAttacking) 
+        Flip(rb.velocity.x);
+        if(!pCombat.isAttacking && !pCombat.isAttackingSlow) 
         {
             MoveHorizontal(horizontalMove);
         }
+        if (pCombat.isAttackingSlow && Mathf.Abs(horizontalInput) < 0.01f && Mathf.Abs(rb.velocity.x) > 0.01f)
+        {
+              // Apply deceleration when no input is detected but there is still some velocity
+             rb.velocity = new Vector2(rb.velocity.x * 0.9f, rb.velocity.y * 0.9f);
+        }
+
+
     }
 
     #region Horizontal Functions
     public void MoveHorizontal(float moveSpeed)
 	{
-		if (pController.IsGrounded())
+  
+         if (pController.IsGrounded())
 		{
             // Hedef Velocityi bul. @Han
             Vector3 targetVelocity = new Vector2(moveSpeed * 10f, rb.velocity.y); //Karakterin Yatay Duzlemde Ulastigi Maksimum Hiz @Han
@@ -69,7 +79,10 @@ public class PlayerMovement : MonoBehaviour
             // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
         }
+    }
 
+    public void Flip(float moveSpeed){
+        Debug.Log(moveSpeed);
         if (moveSpeed > 0)
 		{
 			Flip('R');

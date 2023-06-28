@@ -31,7 +31,7 @@ public class PlayerAnimationManager : MonoBehaviour
             animator.CrossFade("Player_Ascend", 0, 0);
             break;
 
-            case "_PeakLow":
+            case "PeakLow":
             animator.CrossFade("Player_Descend", 0, 0);
             break;
 
@@ -41,6 +41,10 @@ public class PlayerAnimationManager : MonoBehaviour
 
             case "Des_Fast":
             animator.CrossFade("Player_Descend", 0, 0);
+            break;
+
+            case "NearGroundOnAir":
+            animator.CrossFade("Player_DescendToIdle", 0, 0);
             break;
         }
     }

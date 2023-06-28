@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private float _MaxCoyoteTimeValue = 0.25f;
     [SerializeField] private LayerMask _GroundLayers; //Ground Layerlari
     private Transform m_GroundCheck;
-    public bool _Grounded; //Karakterin Ground Layer  olan objelere Dokunup Dokunmadigini Gosteren Deger. @Han
+    public Transform m_GroundCheck_2;
     public bool _CoyoteTime; //coyote time 
     public float coyoteTimeValue;
     private float fallMultiplier = 1.2f; 
@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
     private bool isDashing;
 
     #endregion
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -51,10 +50,11 @@ public class PlayerController : MonoBehaviour
 
      public void StateController(){
 
-        if(pCombat.isAttacking){
+        if(pCombat.isAttacking || pCombat.isAttackingSlow){
 
             playerState = "Attacking";
-        }else if(pMovement.isDashing){
+        }
+        else if(pMovement.isDashing){
 
             playerState = "Dashing";
         }
@@ -79,8 +79,11 @@ public class PlayerController : MonoBehaviour
             Vector2 velocity =  rb.velocity;
             float magnitude = velocity.y;
 
+            if(magnitude < -0.1f && IsNearGround()){
 
-            if(magnitude <= 1f && magnitude > 0f){
+                playerState = "NearGroundOnAir";
+            }
+            else if(magnitude <= 1f && magnitude > 0f){
 
                 pMovement.airSpeed = 9f;
                 playerState = "Peak";
@@ -121,10 +124,6 @@ public class PlayerController : MonoBehaviour
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
 
         }
-        else if(playerState == "Ascend"){
-
-        }
-
     }
       private void StateCheck(){
 
@@ -148,6 +147,30 @@ public class PlayerController : MonoBehaviour
     public bool IsGrounded()
     {
         return Physics2D.OverlapCircle(m_GroundCheck.position, 0.2f, _GroundLayers);
+    }
+
+    public bool IsNearGround()
+    {
+        // Perform linecast from player position to target position
+        RaycastHit2D hit = Physics2D.Linecast(this.transform.position, m_GroundCheck_2.position, _GroundLayers);
+
+        // Check if there was a collision along the line
+        if (hit.collider != null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Draw a line from player to target in Scene view
+        if (this.transform != null && this.transform != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(this.transform.position, m_GroundCheck_2.position);
+        }
     }
 
 }
