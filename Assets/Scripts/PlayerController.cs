@@ -50,9 +50,11 @@ public class PlayerController : MonoBehaviour
 
      public void StateController(){
 
-        if(pCombat.isAttacking || pCombat.isAttackingSlow){
+        if(pCombat.isAttacking){
 
             playerState = "Attacking";
+        }else if(pCombat.isAttackingSlow){
+            playerState = "AttackingSlow";
         }
         else if(pMovement.isDashing){
 
@@ -109,7 +111,14 @@ public class PlayerController : MonoBehaviour
     }
 
     public void SetGravity(){
-        if(playerState == "Peak" || playerState == "PeakLow"){
+        if(playerState == "Attacking"){
+            if(Mathf.Abs(rb.velocity.y) > 10 && (Mathf.Abs(rb.velocity.x) < 4)){
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallFastMultiplier * 8 - 1) * Time.deltaTime;
+            }
+        }else if(playerState == "AttackingSlow"){
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallFastMultiplier * 2 - 1) * Time.deltaTime;
+        }
+        else if(playerState == "Peak" || playerState == "PeakLow"){
 
             rb.velocity += Vector2.up * Physics2D.gravity.y * (peakMultiplier - 1) * Time.deltaTime;
 

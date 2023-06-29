@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [Range(0, 100f)][SerializeField] private float runSpeed = 35f;
     [Range(0, 10f)][SerializeField] public float airSpeed = 7f;
     [Range(0, .3f)][SerializeField] private float _movementSmoothing = 0.15f; 
+    [Range(0, .5f)][SerializeField] private float airMovementSmoothing = 0.5f;
     #endregion
 
     #region JumpValues
@@ -43,46 +44,63 @@ public class PlayerMovement : MonoBehaviour
         Jump();   
     }
 
-    void FixedUpdate()
+   void FixedUpdate()
+{
+    float horizontalInput = Input.GetAxisRaw("Horizontal");
+    float horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
+    Flip(rb.velocity.x);
+
+    if (!pCombat.isAttacking && !pCombat.isAttackingSlow)
     {
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
-        Flip(rb.velocity.x);
-        if(!pCombat.isAttacking && !pCombat.isAttackingSlow) 
-        {
-            MoveHorizontal(horizontalMove);
-        }
-        if (pCombat.isAttackingSlow && Mathf.Abs(horizontalInput) < 0.01f && Mathf.Abs(rb.velocity.x) > 0.01f)
-        {
-              // Apply deceleration when no input is detected but there is still some velocity
-             rb.velocity = new Vector2(rb.velocity.x * 0.9f, rb.velocity.y * 0.9f);
-        }
-
-
+        MoveHorizontal(horizontalMove);
+    }
+    else if (pCombat.isAttackingSlow && !pController.IsGrounded())
+    {
+        MoveHorizontalSlow(horizontalMove, horizontalInput);
     }
 
-    #region Horizontal Functions
-    public void MoveHorizontal(float moveSpeed)
-	{
-  
-         if (pController.IsGrounded())
-		{
-            // Hedef Velocityi bul. @Han
-            Vector3 targetVelocity = new Vector2(moveSpeed * 10f, rb.velocity.y); //Karakterin Yatay Duzlemde Ulastigi Maksimum Hiz @Han
-            // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
-		} 
-        else if (!pController.IsGrounded())
-        {
-            // Hedef Velocityi bul. @Han
-            Vector3 targetVelocity = new Vector2(moveSpeed * airSpeed, rb.velocity.y);
-            // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
-        }
+}
+
+#region Horizontal Functions
+public void MoveHorizontal(float moveSpeed)
+{
+    if (pController.IsGrounded())
+    {
+        // Hedef Velocityi bul. @Han
+        Vector3 targetVelocity = new Vector2(moveSpeed * 10f, rb.velocity.y); //Karakterin Yatay Duzlemde Ulastigi Maksimum Hiz @Han
+        // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
+        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
     }
+    else if (!pController.IsGrounded())
+    {
+        // Hedef Velocityi bul. @Han
+        Vector3 targetVelocity = new Vector2(moveSpeed * airSpeed, rb.velocity.y);
+        // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
+        rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
+    }
+}
+
+public void MoveHorizontalSlow(float moveSpeed, float horizontalInput)
+{
+        Vector3 targetVelocity;
+        if(horizontalInput == 0){
+            if(rb.velocity.x > 2){
+            // Hedef Velocityi bul. @Han
+            targetVelocity = new Vector2((moveSpeed + 0.75f)* airSpeed, rb.velocity.y);
+            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, airMovementSmoothing);
+            }else if(rb.velocity.x < -2){
+            targetVelocity = new Vector2((moveSpeed - 0.75f)* airSpeed, rb.velocity.y);
+            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, airMovementSmoothing);
+            }       
+        }else{
+            // Hedef Velocityi bul. @Han
+            targetVelocity = new Vector2(moveSpeed * 10f, rb.velocity.y); //Karakterin Yatay Duzlemde Ulastigi Maksimum Hiz @Han
+            // Buldugun Velocitiyi SmoothDamp ile uygula. @Han
+            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
+        }   
+}
 
     public void Flip(float moveSpeed){
-        Debug.Log(moveSpeed);
         if (moveSpeed > 0)
 		{
 			Flip('R');
@@ -98,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump(){
 
-        if (pController._CoyoteTime && Input.GetButtonDown("Jump") && rb.velocity.y < 0.01f)
+        if (pController._CoyoteTime && Input.GetButtonDown("Jump") && rb.velocity.y < 0.01f || pController._CoyoteTime && Input.GetKeyDown(KeyCode.W) && rb.velocity.y < 0.01f)
         {
             Vector3 velocity = rb.velocity;
             velocity.y = 0f;

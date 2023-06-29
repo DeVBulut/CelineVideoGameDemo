@@ -14,7 +14,7 @@ public class PlayerCombat : MonoBehaviour
     public bool isAttackingSlow;
     private bool canAttack = true;
     private float originalGravity;
-
+    [SerializeField] private float attackSpeed = 500f;
     [SerializeField] private LayerMask HittableLayers;
     [Range(0, 10)][SerializeField] private int AttackDamage;                    
 
@@ -31,6 +31,9 @@ public class PlayerCombat : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Mouse0) && cooldownCounter < 0) {  Slash(); }
 
 
+        if(isAttackingSlow == true && pController.IsGrounded()){
+                isAttackingSlow = false;
+        }
     }
 
     public void Slash()
@@ -44,7 +47,7 @@ public class PlayerCombat : MonoBehaviour
             Vector2 dashDirection = (GetPositionOfMouse() - transform.position).normalized;
             // Apply the dash force to the player
             rb.velocity = Vector2.zero;
-            rb.AddForce(dashDirection * 12f, ForceMode2D.Impulse);
+            rb.AddForce(dashDirection * attackSpeed, ForceMode2D.Impulse);
             StartCoroutine(SlowDownAttack());
         }
         // else{
@@ -60,22 +63,14 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator SlowDownAttack(){
 
-    yield return new WaitForSeconds(0.05f); // Adjust this delay as needed
+    yield return new WaitForSeconds(0.1f); // Adjust this delay as needed
 
     isAttackingSlow = true;
     isAttacking = false;
 
-    StartCoroutine(SlowDownAttackConnection());
     }
 
-    IEnumerator SlowDownAttackConnection(){
 
-    yield return new WaitForSeconds(0.2f); // Adjust this delay as needed
-
-    isAttackingSlow = false;
-    
-
-    }
 
     private Vector3 GetPositionOfMouse()
     {
