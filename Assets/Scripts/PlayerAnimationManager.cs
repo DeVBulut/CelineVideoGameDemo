@@ -16,7 +16,6 @@ public class PlayerAnimationManager : MonoBehaviour
         switch(pCont.playerState){
 
             case "Attacking" :
-            animator.CrossFade("Player_Attack", 0, 0);
             break;
             
             case "Run" :

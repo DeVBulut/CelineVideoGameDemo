@@ -50,13 +50,8 @@ public class PlayerMovement : MonoBehaviour
     float horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
     Flip(rb.velocity.x);
 
-    if (!pCombat.isAttacking && !pCombat.isAttackingSlow)
-    {
+    if(!pCombat.isAttacking){
         MoveHorizontal(horizontalMove);
-    }
-    else if (pCombat.isAttackingSlow && !pController.IsGrounded())
-    {
-        MoveHorizontalSlow(horizontalMove, horizontalInput);
     }
 
 }

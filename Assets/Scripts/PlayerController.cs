@@ -53,8 +53,6 @@ public class PlayerController : MonoBehaviour
         if(pCombat.isAttacking){
 
             playerState = "Attacking";
-        }else if(pCombat.isAttackingSlow){
-            playerState = "AttackingSlow";
         }
         else if(pMovement.isDashing){
 
