@@ -15,10 +15,10 @@ public class PlayerCombat : MonoBehaviour
     [Range(0, 10)][SerializeField] private int AttackDamage;    
 
     public float cooldownTime = 2f; 
-    private float nextFireTime = 0f;
+    private float nextFireTime = 0.2f;
     public int noOFClicks = 0;
     float lastClickedTime = 0;
-    float maxComboDelay = 1;
+    float maxComboDelay = 0.3f;
 
     Animator animator;               
 
@@ -30,15 +30,15 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.7f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
+      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
       {
         animator.SetBool("hit1", false);
       }
-      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.7f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit2"))
+      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit2"))
       {
         animator.SetBool("hit2", false);
       }
-      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.7f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit3"))
+      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit3"))
       {
         animator.SetBool("hit3", false);
         noOFClicks = 0;
@@ -67,12 +67,12 @@ public class PlayerCombat : MonoBehaviour
         }
         noOFClicks = Mathf.Clamp(noOFClicks, 0, 3);
 
-        if(noOFClicks >= 2 && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.55f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit1")){
+        if(noOFClicks >= 2 && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit1")){
             animator.SetBool("hit1", false);
             animator.SetBool("hit2", true);
         }
 
-        if(noOFClicks >= 3 && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.55f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit2")){
+        if(noOFClicks >= 3 && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit2")){
             animator.SetBool("hit2", false);
             animator.SetBool("hit3", true);
         }

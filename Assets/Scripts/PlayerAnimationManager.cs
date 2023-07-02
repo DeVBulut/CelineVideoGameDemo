@@ -14,15 +14,13 @@ public class PlayerAnimationManager : MonoBehaviour
     void FixedUpdate()
     {
         switch(pCont.playerState){
-
-            case "Attacking" :
-            break;
             
             case "Run" :
             animator.CrossFade("Player_Run", 0, 0);
             break;
 
             case "Idle" :
+            Debug.Log("Idled");
             animator.CrossFade("Player_Idle", 0, 0);
             break;
 
