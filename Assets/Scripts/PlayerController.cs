@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI textVerticalSpeedState;
     public TextMeshProUGUI textHorizontalSpeedState;
 	private Rigidbody2D rb;//YOk ARTIIK RIGIDBODY!!! @Han
-    private TestCode pCombat;
+    private PlayerCombat pCombat;
     private PlayerMovement pMovement;
     //Daha Yumusak Gitmesini Sagliyo bu deger. @Han
     private float _MaxCoyoteTimeValue = 0.25f;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        pCombat = GetComponent<TestCode>();
+        pCombat = GetComponent<PlayerCombat>();
         pMovement = GetComponent<PlayerMovement>();
         m_GroundCheck = transform.GetChild(0);
         textState = transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();

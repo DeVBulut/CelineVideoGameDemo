@@ -4,108 +4,111 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private PlayerController pController;
-    public Transform attackColliderPos_1;
-    public Transform attackColliderPos_2;
+		private Rigidbody2D rb;
+		private PlayerController pController;
+		public Transform attackColliderPos_1;
+		public Transform attackColliderPos_2;
 
-    public bool isAttacking;
-    private float originalGravity;
-    [SerializeField] private LayerMask HittableLayers;
-    [Range(0, 10)][SerializeField] private int AttackDamage;    
+		public bool isAttacking;
+		private float originalGravity;
+		[SerializeField] private LayerMask HittableLayers;
+		[Range(0, 10)][SerializeField] private int AttackDamage;    
 
-    public float cooldownTime = 2f; 
-    private float nextFireTime = 0.2f;
-    public int noOFClicks = 0;
-    float lastClickedTime = 0;
-    float maxComboDelay = 0.3f;
+		public float cooldownTime = 2f; 
+		private float nextFireTime = 0.2f;
+		public int noOFClicks = 0;
+		float lastClickedTime = 0;
+		float maxComboDelay = 0.3f;
 
-    Animator animator;               
+		Animator animator;               
 
-    private void Start(){
-        rb = GetComponent<Rigidbody2D>();
-        originalGravity = rb.gravityScale;
-        animator = GetComponent<Animator>();
-    }
+		private void Start(){
+				rb = GetComponent<Rigidbody2D>();
+				originalGravity = rb.gravityScale;
+				animator = GetComponent<Animator>();
+		}
 
-    void Update()
-    {
-      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
-      {
-        animator.SetBool("hit1", false);
-      }
-      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit2"))
-      {
-        animator.SetBool("hit2", false);
-      }
-      if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.2f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit3"))
-      {
-        animator.SetBool("hit3", false);
-        noOFClicks = 0;
-      }
+		void Update()
+		{
+				Debug.Log(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
 
-      if(Time.time - lastClickedTime > maxComboDelay)
-      {
-        noOFClicks = 0;
-      }
+				 if(Input.GetKeyDown(KeyCode.F))
+				 {
+				
+						if(!animator.GetCurrentAnimatorStateInfo(0).IsName("hit1") && !animator.GetCurrentAnimatorStateInfo(0).IsName("hit2")){
+										Debug.Log("First Attack");
+										isAttacking = true;
+										StartCoroutine(Attack(1));
+						}
+						if(animator.GetCurrentAnimatorStateInfo(0).IsName("hit1")){
+										Debug.Log("Second Attack");
+										isAttacking = true;
+										StartCoroutine(Attack(2));
+						}
+						if(animator.GetCurrentAnimatorStateInfo(0).IsName("hit2")){
+										Debug.Log("Third Attack");
+										isAttacking = true;
+										StartCoroutine(Attack(3));
+						}
+						
+				}
 
-      if(Time.time > nextFireTime)
-      {
-        if(Input.GetMouseButton(0))
-        {
-            OnClick();
-        }
-      }
-    }
+				if(AttackAnimatonPlaying() && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.5)
+				{
+							isAttacking = false;
+				}
+				
+			
+		}
+		
+	public bool AttackAnimatonPlaying(){
+				return animator.GetCurrentAnimatorStateInfo(0).IsName("hit1") || animator.GetCurrentAnimatorStateInfo(0).IsName("hit2") || animator.GetCurrentAnimatorStateInfo(0).IsName("hit3");
+	 }
 
-    void OnClick(){
+	private IEnumerator Attack(int count)
+	{
+				if(AttackAnimatonPlaying())
+				{
+				yield return new WaitForSeconds(0.8f - animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+						isAttacking = true;
+						animator.CrossFade("hit"+ count, 0, 0);
+				}
+				else 
+				{
+				isAttacking = true;
+				animator.CrossFade("hit"+ count, 0, 0);
+				}
+	 }		
 
-        lastClickedTime = Time.time;
-        noOFClicks++;
-        if(noOFClicks == 1){
-            animator.SetBool("hit1", true);
-        }
-        noOFClicks = Mathf.Clamp(noOFClicks, 0, 3);
 
-        if(noOFClicks >= 2 && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit1")){
-            animator.SetBool("hit1", false);
-            animator.SetBool("hit2", true);
-        }
+		public void Slash()
+		{
+				Vector2 attackPos_1 = new Vector2(attackColliderPos_1.position.x, attackColliderPos_1.position.y);
+				Vector2 attackPos_2 = new Vector2(attackColliderPos_2.position.x, attackColliderPos_2.position.y);
+				Collider2D[] objectsInCollider = Physics2D.OverlapAreaAll(attackPos_1, attackPos_2, HittableLayers);
+				foreach (var hittedObject in objectsInCollider)
+				{
+						EnemyHealth enemyHealth = hittedObject.GetComponent<EnemyHealth>();
+						enemyHealth.GetHit(5, this.transform.position);
+				}
+		}
 
-        if(noOFClicks >= 3 && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f && animator.GetCurrentAnimatorStateInfo(0).IsName("hit2")){
-            animator.SetBool("hit2", false);
-            animator.SetBool("hit3", true);
-        }
-    }
+		private Vector3 GetPositionOfMouse()
+		{
+				// Get the position of the mouse in screen space
+				Vector3 mousePosition = Input.mousePosition;
+				// Set the z coordinate to the distance from the camera to the game object
+				mousePosition.z = -Camera.main.transform.position.z;
+				// Convert the position from screen space to world space
+				Vector3 worldPositionofMouse = Camera.main.ScreenToWorldPoint(mousePosition);
+				return worldPositionofMouse;
+		}
 
-    public void Slash()
-    {
-        Vector2 attackPos_1 = new Vector2(attackColliderPos_1.position.x, attackColliderPos_1.position.y);
-        Vector2 attackPos_2 = new Vector2(attackColliderPos_2.position.x, attackColliderPos_2.position.y);
-        Collider2D[] objectsInCollider = Physics2D.OverlapAreaAll(attackPos_1, attackPos_2, HittableLayers);
-        foreach (var hittedObject in objectsInCollider)
-        {
-            EnemyHealth enemyHealth = hittedObject.GetComponent<EnemyHealth>();
-            enemyHealth.GetHit(5, this.transform.position);
-        }
-    }
+		private void OnDrawGizmos() {
+				Vector2 attackPos_1 = new Vector2(attackColliderPos_1.position.x, attackColliderPos_1.position.y);
+				Vector2 attackPos_2 = new Vector2(attackColliderPos_2.position.x, attackColliderPos_2.position.y);
 
-    private Vector3 GetPositionOfMouse()
-    {
-        // Get the position of the mouse in screen space
-        Vector3 mousePosition = Input.mousePosition;
-        // Set the z coordinate to the distance from the camera to the game object
-        mousePosition.z = -Camera.main.transform.position.z;
-        // Convert the position from screen space to world space
-        Vector3 worldPositionofMouse = Camera.main.ScreenToWorldPoint(mousePosition);
-        return worldPositionofMouse;
-    }
-
-    private void OnDrawGizmos() {
-        Vector2 attackPos_1 = new Vector2(attackColliderPos_1.position.x, attackColliderPos_1.position.y);
-        Vector2 attackPos_2 = new Vector2(attackColliderPos_2.position.x, attackColliderPos_2.position.y);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube((attackPos_1 + attackPos_2) * 0.5f, attackPos_2 - attackPos_1);
-    }
+				Gizmos.color = Color.red;
+				Gizmos.DrawWireCube((attackPos_1 + attackPos_2) * 0.5f, attackPos_2 - attackPos_1);
+		}
 }
