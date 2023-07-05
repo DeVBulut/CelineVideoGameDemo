@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0cdcea5fcd0b3bf42b6a60a9652d1243
+guid: 89de0ff365f400c4d8c77949f6e3f35c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 50
+  spritePixelsToUnits: 25
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -141,13 +141,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Test_Descend_Idle_0
+      name: vagabond-jump-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 60
-        height: 48
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,20 +155,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8ed26649357dcfe4d91cc49c8af34619
-      internalID: 165163378
+      spriteID: 124d1f4b6853b3f45b9340c2c01b70f6
+      internalID: 305770974
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Test_Descend_Idle_1
+      name: vagabond-jump-Sheet_1
       rect:
         serializedVersion: 2
-        x: 60
+        x: 64
         y: 0
-        width: 60
-        height: 48
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -176,20 +176,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fdf4fff293b44c4eb21663f4aee9ceb
-      internalID: 1816223127
+      spriteID: 167e4a917c8976e459d5d1522f968a1b
+      internalID: 301771705
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Test_Descend_Idle_2
+      name: vagabond-jump-Sheet_2
       rect:
         serializedVersion: 2
-        x: 120
+        x: 128
         y: 0
-        width: 60
-        height: 48
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -197,29 +197,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 067bd148f41d1ff4e8a74738f02116c7
-      internalID: 1816473734
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Test_Descend_Idle_3
-      rect:
-        serializedVersion: 2
-        x: 180
-        y: 0
-        width: 60
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1ab3650f28ce1cb40bb571c4c3eb7f6a
-      internalID: -847899253
+      spriteID: c7cfe9253c777454a8eba8fef06faaf7
+      internalID: 1962892602
       vertices: []
       indices: 
       edges: []
@@ -235,10 +214,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Test_Descend_Idle_0: 165163378
-      Test_Descend_Idle_1: 1816223127
-      Test_Descend_Idle_2: 1816473734
-      Test_Descend_Idle_3: -847899253
+      vagabond-jump-Sheet_0: 305770974
+      vagabond-jump-Sheet_1: 301771705
+      vagabond-jump-Sheet_2: 1962892602
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

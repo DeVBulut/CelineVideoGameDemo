@@ -48,7 +48,6 @@ public class TestCode : MonoBehaviour
         }else {
         animator.CrossFade("hit"+ count, 0, 0);
         }
-
    }
 
 }

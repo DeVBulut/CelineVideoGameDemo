@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 69453b7c6e5868140895287283558975
+guid: 4e1188430c85e5c46bb56d15bd696219
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 25
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -137,239 +137,320 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Windows Store Apps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: tvOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player_Run_0
+      name: vagabond-attack-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db93634d29f900146b717e61f98a8d69
-      internalID: -5446662
+      spriteID: db4d515ca3d0afa4c831013f67da96d9
+      internalID: 516362937
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_1
+      name: vagabond-attack-Sheet_1
       rect:
         serializedVersion: 2
-        x: 44
+        x: 128
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1da6d06aa28f2e243b68c22ee8546e26
-      internalID: 1871232022
+      spriteID: e0d9e772725c40a40a23041a4b3f32a0
+      internalID: -1688188563
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_2
+      name: vagabond-attack-Sheet_2
       rect:
         serializedVersion: 2
-        x: 88
+        x: 256
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1a6f599be205edd46a56704870be7e51
-      internalID: -300424182
+      spriteID: 6398ef9487619fa45821dd7a42ce0735
+      internalID: 510601899
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_3
+      name: vagabond-attack-Sheet_3
       rect:
         serializedVersion: 2
-        x: 132
+        x: 384
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2dfec788fcdeb104b9be7236ac4d5c03
-      internalID: 521945912
+      spriteID: ef8746ae2b15a10418a720b5fe70a093
+      internalID: 1373134446
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_4
+      name: vagabond-attack-Sheet_4
       rect:
         serializedVersion: 2
-        x: 176
+        x: 512
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 842d2782acc0fef4f832eefb86bdf428
-      internalID: -1509155047
+      spriteID: 6328102b764865741b77f1d5267f8947
+      internalID: 2028375494
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_5
+      name: vagabond-attack-Sheet_5
       rect:
         serializedVersion: 2
-        x: 220
+        x: 640
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46f7ab3c80d7458438db4149ad00cd00
-      internalID: 603039097
+      spriteID: 491acffe9e0dc8549afacd033533a03d
+      internalID: 972457843
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_6
+      name: vagabond-attack-Sheet_6
       rect:
         serializedVersion: 2
-        x: 264
+        x: 768
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 111e7aeee4d067d429c0b75e6cad08e9
-      internalID: 82542823
+      spriteID: 894a1df7f70a8514abdf5312c91ad07e
+      internalID: 254641329
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_7
+      name: vagabond-attack-Sheet_7
       rect:
         serializedVersion: 2
-        x: 308
+        x: 896
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e3ac5400bf2d86d44a808737a8d7515a
-      internalID: 1775738739
+      spriteID: 571b67ebe8c7bd043b1687c0257f178f
+      internalID: 807501458
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_8
+      name: vagabond-attack-Sheet_8
       rect:
         serializedVersion: 2
-        x: 352
+        x: 1024
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 715f9df4652b6574e82e43518276bf1c
-      internalID: 626931267
+      spriteID: cfaab3a7d000e4a438b6d39b656e3c99
+      internalID: 771379488
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Run_9
+      name: vagabond-attack-Sheet_9
       rect:
         serializedVersion: 2
-        x: 396
+        x: 1152
         y: 0
-        width: 44
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ae48aea0e12ce6f43ac18b32d740653e
-      internalID: -877361570
+      spriteID: bf07d7c77000d3b4db28d1a4ca9668e5
+      internalID: 1611150349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vagabond-attack-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 0
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49f32edf837ba564ea316005d82dda42
+      internalID: -1022683337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vagabond-attack-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 0
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 116043f9a529f474bb82f442e7c1787c
+      internalID: -126417762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vagabond-attack-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfdeeb3fb4acdc54aaac2d2d3c07fae9
+      internalID: 1507222403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vagabond-attack-Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 1664
+        y: 0
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80bad53fbb0a5b94a972fcd6ddb5c35f
+      internalID: 1776042644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vagabond-attack-Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 1792
+        y: 0
+        width: 128
+        height: 64
+      alignment: 9
+      pivot: {x: 0.25, y: 0.1875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9906eb57abbf7314abfe689e79fb1d0a
+      internalID: -1084483038
       vertices: []
       indices: 
       edges: []
@@ -385,16 +466,21 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Player_Run_0: -5446662
-      Player_Run_1: 1871232022
-      Player_Run_2: -300424182
-      Player_Run_3: 521945912
-      Player_Run_4: -1509155047
-      Player_Run_5: 603039097
-      Player_Run_6: 82542823
-      Player_Run_7: 1775738739
-      Player_Run_8: 626931267
-      Player_Run_9: -877361570
+      vagabond-attack-Sheet_0: 516362937
+      vagabond-attack-Sheet_1: -1688188563
+      vagabond-attack-Sheet_10: -1022683337
+      vagabond-attack-Sheet_11: -126417762
+      vagabond-attack-Sheet_12: 1507222403
+      vagabond-attack-Sheet_13: 1776042644
+      vagabond-attack-Sheet_14: -1084483038
+      vagabond-attack-Sheet_2: 510601899
+      vagabond-attack-Sheet_3: 1373134446
+      vagabond-attack-Sheet_4: 2028375494
+      vagabond-attack-Sheet_5: 972457843
+      vagabond-attack-Sheet_6: 254641329
+      vagabond-attack-Sheet_7: 807501458
+      vagabond-attack-Sheet_8: 771379488
+      vagabond-attack-Sheet_9: 1611150349
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
