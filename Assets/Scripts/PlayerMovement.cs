@@ -48,13 +48,21 @@ public class PlayerMovement : MonoBehaviour
 	void FixedUpdate()
 	{
 		Flip(rb.velocity.x);
-        MoveHorizontal();
+
+		if(animator.GetBool("canMove") == true){
+        	MoveHorizontal(1);
+		}else{
+			MoveHorizontal(0);
+		}
     }
 
 	#region Horizontal Functions
-	public void MoveHorizontal()
+	public void MoveHorizontal(int canMove)
 	{
-		float moveSpeed = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime;
+		if(canMove == 0){
+			rb.velocity = Vector2.zero;
+		}
+		float moveSpeed = Input.GetAxisRaw("Horizontal") * runSpeed * Time.deltaTime * canMove;
 		if (pController.IsGrounded())
 		{
 			// Hedef Velocityi bul. @Han
