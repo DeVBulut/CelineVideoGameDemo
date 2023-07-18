@@ -9,15 +9,15 @@ public class PlayerController : MonoBehaviour
 	public TextMeshProUGUI textState;
 	public TextMeshProUGUI textVerticalSpeedState;
 	public TextMeshProUGUI textHorizontalSpeedState;
-	private Rigidbody2D rb;//YOk ARTIIK RIGIDBODY!!! @Han
+	private Rigidbody2D rb;
 	private PlayerCombat pCombat;
 	private PlayerMovement pMovement;
-	//Daha Yumusak Gitmesini Sagliyo bu deger. @Han
+
 	private float _MaxCoyoteTimeValue = 0.25f;
-	[SerializeField] private LayerMask _GroundLayers; //Ground Layerlari
+	[SerializeField] private LayerMask _GroundLayers; 
 	private Transform m_GroundCheck;
 	public Transform m_GroundCheck_2;
-	public bool _CoyoteTime; //coyote time 
+	public bool _CoyoteTime; 
 	public float coyoteTimeValue;
 	private float fallMultiplier = 1.2f; 
 	private float peakMultiplier = 0.5f;
@@ -45,9 +45,9 @@ public class PlayerController : MonoBehaviour
 		StateController();
 		SetGravity();
 		textState.text = playerState;
-		textVerticalSpeedState.text = rb.velocity.y.ToString();
-		//textHorizontalSpeedState.text = rb.velocity.x.ToString();
-	}
+        textVerticalSpeedState.text = Input.GetAxisRaw("Horizontal").ToString();
+        //textHorizontalSpeedState.text = rb.velocity.x.ToString();
+    }
 
 	 public void StateController(){
 
@@ -103,9 +103,7 @@ public class PlayerController : MonoBehaviour
 		
 		if(playerState == "Peak")
 		{
-
 			rb.velocity += Vector2.up * Physics2D.gravity.y * (peakMultiplier - 1) * Time.deltaTime;
-
 		}
 		else if(playerState == "Descend"){
 

@@ -12,13 +12,6 @@ public class PlayerCombat : MonoBehaviour
 		public bool isAttacking;
 		private float originalGravity;
 		[SerializeField] private LayerMask HittableLayers;
-		[Range(0, 10)][SerializeField] private int AttackDamage;    
-
-		public float cooldownTime = 2f; 
-		private float nextFireTime = 0.2f;
-		public int noOFClicks = 0;
-		float lastClickedTime = 0;
-		float maxComboDelay = 0.3f;
 
 		Animator animator;               
 

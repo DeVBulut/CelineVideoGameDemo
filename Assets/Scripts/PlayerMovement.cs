@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		Flip(rb.velocity.x);
+		Flip();
 
 		if(animator.GetBool("canMove") == true){
         	MoveHorizontal(1);
@@ -99,11 +99,12 @@ public class PlayerMovement : MonoBehaviour
 			}   
 	}
 
-	public void Flip(float moveSpeed){
-		if (moveSpeed > 0)
+	public void Flip(){
+        float inputEntered = Input.GetAxisRaw("Horizontal");
+        if (inputEntered > 0)
 		{
 			Flip('R');
-		}else if (moveSpeed < 0)
+		}else if (inputEntered < 0)
 		{
 			Flip('L');
 		}

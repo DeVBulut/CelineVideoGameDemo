@@ -13,18 +13,6 @@ public class SetAttackBehaviour : StateMachineBehaviour
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-            if(stateInfo.IsName("Attack_0"))
-            {
-                AttackSquence = 1;
-            }
-            else if(stateInfo.IsName("Attack_1"))
-            {
-                AttackSquence = 2;
-            }
-            else if(stateInfo.IsName("Attack_2"))
-            {
-                AttackSquence = 3;
-            }
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
@@ -36,7 +24,7 @@ public class SetAttackBehaviour : StateMachineBehaviour
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
+        
     }
 
     // OnStateMove is called before OnStateMove is called on any state inside this state machine
@@ -61,7 +49,6 @@ public class SetAttackBehaviour : StateMachineBehaviour
     // OnStateMachineExit is called when exiting a state machine via its Exit Node
     override public void OnStateMachineExit(Animator animator, int stateMachinePathHash)
     {
-        AttackSquence = 0;        
         animator.SetBool(boolName, valueOnExit);
     
     }
