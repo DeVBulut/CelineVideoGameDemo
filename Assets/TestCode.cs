@@ -36,8 +36,9 @@ public class TestCode : MonoBehaviour
         {
             if (!hasExecuted)
             {
-                countdownCounter = countdownNormal;
                 hasExecuted = true;
+                //countdownCounter = countdownNormal;
+                StartCoroutine(AttackSquenceDelay());
             }
         }
         else
@@ -46,8 +47,29 @@ public class TestCode : MonoBehaviour
         }
 
         if(Input.GetMouseButtonDown(0) && countdownCounter < 0){
-
-            animator.SetTrigger(AnimationStrings.AttackTrigger);
+            
+            if(animator.GetInteger(AnimationStrings.AttackSquence) == 0){
+            animator.SetTrigger(AnimationStrings.AttackTrigger + "_1");
+            }
+            if(animator.GetInteger(AnimationStrings.AttackSquence) == 1){
+            animator.SetTrigger(AnimationStrings.AttackTrigger + "_2");
+            }
+            if(animator.GetInteger(AnimationStrings.AttackSquence) == 2){
+            animator.SetTrigger(AnimationStrings.AttackTrigger + "_3");
+            }
+            if(animator.GetInteger(AnimationStrings.AttackSquence) == 3){
+            animator.SetTrigger(AnimationStrings.AttackTrigger + "_1");
+            }
         }
+    }
+
+    private IEnumerator AttackSquenceDelay()
+    {
+        yield return new WaitForSeconds(2f);
+        Debug.Log("Squence Reset");
+        if(animator.GetBool(AnimationStrings.canMove)){
+        animator.SetInteger(AnimationStrings.AttackSquence, 0);
+        }
+        
     }
 }

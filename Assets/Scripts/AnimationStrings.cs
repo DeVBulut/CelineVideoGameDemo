@@ -10,4 +10,5 @@ public class AnimationStrings : MonoBehaviour
     public static string Descend = "Descend";
     public static string AttackTrigger = "AttackTrigger";
     internal static string canMove = "canMove";
+    public static string AttackSquence = "AttackSquence";
 }
