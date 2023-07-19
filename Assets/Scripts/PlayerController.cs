@@ -46,7 +46,6 @@ public class PlayerController : MonoBehaviour
 		SetGravity();
 		textState.text = playerState;
         textVerticalSpeedState.text = Input.GetAxisRaw("Horizontal").ToString();
-        //textHorizontalSpeedState.text = rb.velocity.x.ToString();
     }
 
 	 public void StateController(){

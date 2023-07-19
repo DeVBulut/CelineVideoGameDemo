@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class EnemyHealth : MonoBehaviour
 {
     [Range(1, 100)][SerializeField] int HealthPoints = 2; //enemy cani
-    [Range(1, 5)][SerializeField] float KnockbackForce = 3;  //geri atlama kuveti
+    [Range(0, 5)][SerializeField] float KnockbackForce = 3;  //geri atlama kuveti
     Rigidbody2D rb = new Rigidbody2D();
     [SerializeField] private bool Armored = false; //ilerde armored enemy koyariz diye
 
@@ -33,6 +33,15 @@ public class EnemyHealth : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other) 
+    {
+        if(other.CompareTag("attackHitbox")){
+            GetHit(1, other.gameObject.transform.position);
+            Debug.Log("Got Hit by " + other.gameObject.name);
+        }
+    }
+
 
     public void KnockBack(Vector3 attackerPosition, int Damage)
     {

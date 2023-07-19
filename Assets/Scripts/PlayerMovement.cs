@@ -18,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
 	[Range(0, 100f)][SerializeField] private float runSpeed = 35f;
 	[Range(0, 10f)][SerializeField] public float airSpeed = 7f;
 	[Range(0, .3f)][SerializeField] private float _movementSmoothing = 0.15f; 
-	[Range(0, .5f)][SerializeField] private float airMovementSmoothing = 0.5f;
 	#endregion
 
 	#region JumpValues
@@ -28,7 +27,9 @@ public class PlayerMovement : MonoBehaviour
 	#endregion
 
 	#region DashValues 
-	public bool isDashing = false;
+	private bool isDashing = false;
+	public float dashSpeed;
+
 	#endregion 
 
 	void Start()
@@ -42,19 +43,43 @@ public class PlayerMovement : MonoBehaviour
 
 
 	void Update(){
-		Jump();   
+		Jump();
+		Dash();   
 	}
 
 	void FixedUpdate()
 	{
 		Flip();
-
-		if(animator.GetBool("canMove") == true){
+		if(animator.GetBool(AnimationStrings.canMove) == true)
+		{
         	MoveHorizontal(1);
-		}else{
+		}
+		else if(isDashing)
+		{
+			
+		}
+		else
+		{
 			MoveHorizontal(0);
 		}
     }
+
+	private void Dash(){
+		if(Input.GetKeyDown(KeyCode.LeftShift)){
+		isDashing = true;
+		animator.SetBool(AnimationStrings.canMove, false);
+		rb.velocity = Vector2.zero;
+		rb.AddForce(Vector2.right * dashSpeed, ForceMode2D.Impulse);
+		StartCoroutine(DashDelay());
+		}
+	}
+
+	private IEnumerator DashDelay(){
+		yield return new WaitForSeconds(0.14f);
+		rb.velocity = Vector2.zero;
+		animator.SetBool(AnimationStrings.canMove, true);
+		isDashing = false;
+	}
 
 	#region Horizontal Functions
 	public void MoveHorizontal(int canMove)
@@ -78,26 +103,7 @@ public class PlayerMovement : MonoBehaviour
 			rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
 		}
 	}
-
-	public void MoveHorizontalSlow(float moveSpeed, float horizontalInput)
-	{
-			Vector3 targetVelocity;
-			if(horizontalInput == 0){
-				if(rb.velocity.x > 2){
-				// Hedef Velocityi bul. @Han
-				targetVelocity = new Vector2((moveSpeed + 0.75f)* airSpeed, rb.velocity.y);
-				rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, airMovementSmoothing);
-				}else if(rb.velocity.x < -2){
-				targetVelocity = new Vector2((moveSpeed - 0.75f)* airSpeed, rb.velocity.y);
-				rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, airMovementSmoothing);
-				}       
-			}else{
-				// Hedef Velocityi bul. @Han
-				targetVelocity = new Vector2(moveSpeed * 10f, rb.velocity.y); //Karakterin Yatay Duzlemde Ulastigi Maksimum Hiz @Han
-				// Buldugun Velocitiyi SmoothDamp ile uygula. @Han
-				rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref _velocity, _movementSmoothing);
-			}   
-	}
+	
 
 	public void Flip(){
         float inputEntered = Input.GetAxisRaw("Horizontal");

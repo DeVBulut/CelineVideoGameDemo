@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Bullet
   - Drone
+  - attackHitbox
   layers:
   - Default
   - TransparentFX
