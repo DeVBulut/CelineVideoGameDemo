@@ -27,8 +27,9 @@ public class PlayerMovement : MonoBehaviour
 	#endregion
 
 	#region DashValues 
-	private bool isDashing = false;
+	public bool isDashing = false;
 	public float dashSpeed;
+	private float gravityScale;
 
 	#endregion 
 
@@ -69,16 +70,20 @@ public class PlayerMovement : MonoBehaviour
 		isDashing = true;
 		animator.SetBool(AnimationStrings.canMove, false);
 		rb.velocity = Vector2.zero;
+	    gravityScale = rb.gravityScale;
+		rb.gravityScale = 0;
 		rb.AddForce(Vector2.right * dashSpeed, ForceMode2D.Impulse);
 		StartCoroutine(DashDelay());
 		}
 	}
 
 	private IEnumerator DashDelay(){
-		yield return new WaitForSeconds(0.14f);
+		yield return new WaitForSeconds(.14f);
+		rb.gravityScale = gravityScale;
 		rb.velocity = Vector2.zero;
-		animator.SetBool(AnimationStrings.canMove, true);
 		isDashing = false;
+		animator.SetBool(AnimationStrings.canMove, true);
+
 	}
 
 	#region Horizontal Functions

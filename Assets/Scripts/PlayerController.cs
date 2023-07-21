@@ -68,50 +68,54 @@ public class PlayerController : MonoBehaviour
 		}
 		else if(!IsGrounded())
 		{
-
-			Vector2 velocity =  rb.velocity;
-			float magnitude = velocity.y;
-			
-			animator.SetBool(AnimationStrings.OnGround, false);
-
-			if(magnitude <= 1f && magnitude > 0f)
+			if(!pMovement.isDashing)
 			{
+				Vector2 velocity =  rb.velocity;
+				float magnitude = velocity.y;
+				
+				animator.SetBool(AnimationStrings.OnGround, false);
 
-				pMovement.airSpeed = 9f;
-				animator.SetBool(AnimationStrings.Ascend, false);
-				animator.SetBool(AnimationStrings.Descend, false);
-				playerState = "Peak";
+				if(magnitude <= 1f && magnitude > 0f)
+				{
+
+					pMovement.airSpeed = 9f;
+					animator.SetBool(AnimationStrings.Ascend, false);
+					animator.SetBool(AnimationStrings.Descend, false);
+					playerState = "Peak";
+				}
+				else if(magnitude > 1f)
+				{
+					pMovement.airSpeed = 8f; 
+					animator.SetBool(AnimationStrings.Ascend, true);
+					animator.SetBool(AnimationStrings.Descend, false);
+					playerState = "Ascend";
+				}else if(magnitude < 0f)
+				{
+
+					pMovement.airSpeed = 8f;
+					animator.SetBool(AnimationStrings.Ascend, false);
+					animator.SetBool(AnimationStrings.Descend, true);
+					playerState = "Descend";
+				}  
 			}
-			else if(magnitude > 1f)
-			{
-				pMovement.airSpeed = 8f; 
-				animator.SetBool(AnimationStrings.Ascend, true);
-				animator.SetBool(AnimationStrings.Descend, false);
-				playerState = "Ascend";
-			}else if(magnitude < 0f){
-
-				pMovement.airSpeed = 8f;
-				animator.SetBool(AnimationStrings.Ascend, false);
-				animator.SetBool(AnimationStrings.Descend, true);
-				playerState = "Descend";
-			}  
 		}
 	}
 
 	public void SetGravity(){
-		
-		if(playerState == "Peak")
-		{
-			rb.velocity += Vector2.up * Physics2D.gravity.y * (peakMultiplier - 1) * Time.deltaTime;
-		}
-		else if(playerState == "Descend"){
+		if(!pMovement.isDashing){
+			if(playerState == "Peak")
+			{
+				rb.velocity += Vector2.up * Physics2D.gravity.y * (peakMultiplier - 1) * Time.deltaTime;
+			}
+			else if(playerState == "Descend"){
 
-			rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+				rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
 
-		}else if(playerState == "Ascend"){
+			}else if(playerState == "Ascend"){
 
-			rb.velocity += Vector2.up * Physics2D.gravity.y * (ascendMultiplier - 1) * Time.deltaTime;
+				rb.velocity += Vector2.up * Physics2D.gravity.y * (ascendMultiplier - 1) * Time.deltaTime;
 
+			}
 		}
 	}
 	
