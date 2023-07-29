@@ -16,12 +16,12 @@ public class PlayerMovement : MonoBehaviour
 
 	private Vector3 _velocity = Vector3.zero;
 	[Range(0, 100f)][SerializeField] private float runSpeed = 35f;
-	[Range(0, 10f)][SerializeField] public float airSpeed = 7f;
+	[Range(0, 30f)][SerializeField] public float airSpeed = 7f;
 	[Range(0, .3f)][SerializeField] private float _movementSmoothing = 0.15f; 
 	#endregion
 
 	#region JumpValues
-	[Range(0, 1000f)][SerializeField] private float JumpPower = 400f;
+	[Range(0, 2000f)][SerializeField] private float JumpPower = 400f;
 	public int JumpCount;
 	public int _MaxJumpCount = 1;
 	#endregion
@@ -30,10 +30,12 @@ public class PlayerMovement : MonoBehaviour
 	public bool isDashing = false;
 	public float dashSpeed;
 	private float gravityScale;
+    private float dashCooldown = 0.3f;
+    private float dashCooldownTimer = 0.3f;
 
-	#endregion 
+    #endregion
 
-	void Start()
+    void Start()
 	{
 		pController = GetComponent<PlayerController>();
 		animator = GetComponent<Animator>();
@@ -45,7 +47,8 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update(){
 		Jump();
-		Dash();   
+        dashCooldownTimer -= Time.deltaTime;
+        Dash();   
 	}
 
 	void FixedUpdate()
@@ -57,8 +60,8 @@ public class PlayerMovement : MonoBehaviour
 		}
 		else if(isDashing)
 		{
-			
-		}
+            dashCooldownTimer = dashCooldown;
+        }
 		else
 		{
 			MoveHorizontal(0);
@@ -66,14 +69,16 @@ public class PlayerMovement : MonoBehaviour
     }
 
 	private void Dash(){
-		if(Input.GetKeyDown(KeyCode.LeftShift)){
-		isDashing = true;
-		animator.SetBool(AnimationStrings.canMove, false);
-		rb.velocity = Vector2.zero;
-	    gravityScale = rb.gravityScale;
-		rb.gravityScale = 0;
-		rb.AddForce(Vector2.right * dashSpeed, ForceMode2D.Impulse);
-		StartCoroutine(DashDelay());
+
+		if(Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer < 0){
+            Debug.Log(transform.localScale.x);
+            isDashing = true;
+			animator.SetBool(AnimationStrings.canMove, false);
+			rb.velocity = Vector2.zero;
+			gravityScale = rb.gravityScale;
+			rb.gravityScale = 0;
+			rb.AddForce(new Vector2(dashSpeed * transform.localScale.x, rb.velocity.y), ForceMode2D.Impulse);
+			StartCoroutine(DashDelay());
 		}
 	}
 
@@ -127,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
 
 	public void Jump(){
 
-		if (pController._CoyoteTime && Input.GetButtonDown("Jump") && rb.velocity.y < 0.01f || pController._CoyoteTime && Input.GetKeyDown(KeyCode.W) && rb.velocity.y < 0.01f)
+		if (pController._CoyoteTime && Input.GetKeyDown(KeyCode.W) && rb.velocity.y < 0.01f)
 		{
 			Vector3 velocity = rb.velocity;
 			velocity.y = 0f;
@@ -147,13 +152,13 @@ public class PlayerMovement : MonoBehaviour
 		if (direction == 'L')
 		{
 			Vector3 theScale = transform.localScale;
-			theScale.x = -1;
+			theScale.x = -3;
 			transform.localScale = theScale;
 		}
 		else if(direction == 'R')
 		{
 			Vector3 theScale =  transform.localScale;
-			theScale.x = 1;
+			theScale.x = 3;
 			transform.localScale = theScale;
 		}
 		

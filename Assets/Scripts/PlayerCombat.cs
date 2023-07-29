@@ -60,7 +60,7 @@ public class PlayerCombat : MonoBehaviour
 	}
     private IEnumerator AttackSquenceDelay()
     {
-        yield return new WaitForSeconds(1.3f);
+        yield return new WaitForSeconds(1f);
         if(animator.GetBool(AnimationStrings.canMove)){
         animator.SetInteger(AnimationStrings.AttackSquence, 0);
         }

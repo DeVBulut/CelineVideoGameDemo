@@ -7,8 +7,6 @@ public class PlayerController : MonoBehaviour
 {
 	public string playerState;
 	public TextMeshProUGUI textState;
-	public TextMeshProUGUI textVerticalSpeedState;
-	public TextMeshProUGUI textHorizontalSpeedState;
 	private Rigidbody2D rb;
 	private PlayerCombat pCombat;
 	private PlayerMovement pMovement;
@@ -19,9 +17,9 @@ public class PlayerController : MonoBehaviour
 	public Transform m_GroundCheck_2;
 	public bool _CoyoteTime; 
 	public float coyoteTimeValue;
-	private float fallMultiplier = 1.2f; 
+	private float fallMultiplier = 3f; 
 	private float peakMultiplier = 0.5f;
-	private float ascendMultiplier = 0.7f;
+	private float ascendMultiplier = 2.4f;
 	private Animator animator;
 
 	#region Dash Values
@@ -44,8 +42,6 @@ public class PlayerController : MonoBehaviour
 		StateCheck();
 		StateController();
 		SetGravity();
-		textState.text = playerState;
-        textVerticalSpeedState.text = Input.GetAxisRaw("Horizontal").ToString();
     }
 
 	 public void StateController(){
